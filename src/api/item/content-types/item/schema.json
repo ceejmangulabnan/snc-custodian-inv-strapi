@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "items",
+  "info": {
+    "singularName": "item",
+    "pluralName": "items",
+    "displayName": "Item"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "sku": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "stockQty": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "minThreshold": {
+      "type": "integer",
+      "required": true,
+      "default": 5
+    },
+    "unit": {
+      "type": "string",
+      "default": "Each",
+      "required": true
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "items"
+    }
+  }
+}

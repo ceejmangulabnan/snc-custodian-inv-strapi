@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "transactions",
+  "info": {
+    "singularName": "transaction",
+    "pluralName": "transactions",
+    "displayName": "Transaction"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "custodian": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "transactions"
+    },
+    "orderStatus": {
+      "type": "enumeration",
+      "required": false,
+      "default": "Completed",
+      "enum": [
+        "Pending",
+        "Completed",
+        "Voided"
+      ]
+    },
+    "notes": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "component": "inventory.line-item",
+      "repeatable": true
+    }
+  }
+}
