@@ -71,6 +71,12 @@
       "relation": "oneToMany",
       "target": "api::transaction.transaction",
       "mappedBy": "custodian"
+    },
+    "auditLogs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::audit-log.audit-log",
+      "mappedBy": "user"
     }
   }
 }

@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "audit_logs",
+  "info": {
+    "singularName": "audit-log",
+    "pluralName": "audit-logs",
+    "displayName": "Audit Log"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "auditLogs"
+    },
+    "action": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "Login",
+        "Logout",
+        "Item Created",
+        "Item Updated",
+        "Item Deleted",
+        "Stock In",
+        "Stock Out",
+        "Threshold Reached",
+        "Transaction Completed",
+        "Transaction Voided",
+        "User Created",
+        "User Updated",
+        "User Deleted"
+      ]
+    },
+    "target": {
+      "type": "string"
+    },
+    "category": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "Auth",
+        "Inventory",
+        "Transaction",
+        "User",
+        "System"
+      ]
+    },
+    "detail": {
+      "type": "text"
+    }
+  }
+}

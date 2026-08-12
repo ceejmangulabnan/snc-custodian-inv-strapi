@@ -26,6 +26,8 @@ export default {
           'api::transaction.transaction.create',
           'api::transaction.transaction.update',
           'api::transaction.transaction.delete',
+          'api::audit-log.audit-log.find',
+          'api::audit-log.audit-log.findOne',
           'plugin::users-permissions.user.find',
           'plugin::users-permissions.user.findOne',
           'plugin::users-permissions.user.create',
