@@ -32,7 +32,7 @@ export default {
           'plugin::users-permissions.user.findOne',
           'plugin::users-permissions.user.create',
           'plugin::users-permissions.user.update',
-          'plugin::users-permissions.user.delete',
+          'plugin::users-permissions.user.destroy',
           'plugin::users-permissions.user.count',
           'plugin::users-permissions.user.me',
           'plugin::users-permissions.role.find',
