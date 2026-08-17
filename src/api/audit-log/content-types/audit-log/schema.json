@@ -29,6 +29,8 @@
         "Stock In",
         "Stock Out",
         "Threshold Reached",
+        "Transaction Created",
+        "Transaction Issued",
         "Transaction Completed",
         "Transaction Voided",
         "User Created",

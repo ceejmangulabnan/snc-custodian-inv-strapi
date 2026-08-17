@@ -464,6 +464,8 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
         'Stock In',
         'Stock Out',
         'Threshold Reached',
+        'Transaction Created',
+        'Transaction Issued',
         'Transaction Completed',
         'Transaction Voided',
         'User Created',

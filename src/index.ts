@@ -27,6 +27,11 @@ export default {
           'api::transaction.transaction.create',
           'api::transaction.transaction.update',
           'api::transaction.transaction.delete',
+          'api::transaction.transaction.request',
+          'api::transaction.transaction.issue',
+          'api::transaction.transaction.complete',
+          'api::transaction.transaction.void',
+          'api::transactions-stats.transactions-stats.stats',
           'api::audit-log.audit-log.find',
           'api::audit-log.audit-log.findOne',
           'plugin::users-permissions.user.find',
@@ -48,20 +53,14 @@ export default {
         permissions: [
           'api::item.item.find',
           'api::item.item.findOne',
-          'api::item.item.create',
-          'api::item.item.update',
-          'api::item.item.delete',
           'api::inventory-stats.inventory-stats.stats',
           'api::category.category.find',
           'api::category.category.findOne',
-          'api::category.category.create',
-          'api::category.category.update',
-          'api::category.category.delete',
           'api::transaction.transaction.find',
           'api::transaction.transaction.findOne',
-          'api::transaction.transaction.create',
-          'api::transaction.transaction.update',
-          'api::transaction.transaction.delete',
+          'api::transaction.transaction.request',
+          'api::transaction.transaction.issue',
+          'api::transactions-stats.transactions-stats.stats',
           'plugin::users-permissions.user.me',
         ],
       },
@@ -109,6 +108,20 @@ export default {
             strapi.db.query('plugin::users-permissions.permission').create({
               data: { action, role: roleId },
             })
+          )
+        );
+      }
+
+      const stale = existing.filter(
+        (permission) => !actions.includes(permission.action)
+      );
+
+      if (stale.length > 0) {
+        await Promise.all(
+          stale.map((permission) =>
+            strapi.db
+              .query('plugin::users-permissions.permission')
+              .delete({ where: { id: permission.id } })
           )
         );
       }
