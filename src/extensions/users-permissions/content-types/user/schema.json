@@ -77,6 +77,12 @@
       "relation": "oneToMany",
       "target": "api::audit-log.audit-log",
       "mappedBy": "user"
+    },
+    "stockMovements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::stock-movement.stock-movement",
+      "mappedBy": "user"
     }
   }
 }

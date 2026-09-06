@@ -48,6 +48,12 @@
     "price": {
       "type": "decimal",
       "required": false
+    },
+    "stockMovements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::stock-movement.stock-movement",
+      "mappedBy": "item"
     }
   }
 }

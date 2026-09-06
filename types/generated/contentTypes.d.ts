@@ -463,6 +463,7 @@ export interface ApiAuditLogAuditLog extends Struct.CollectionTypeSchema {
         'Item Deleted',
         'Stock In',
         'Stock Out',
+        'Stock Adjusted',
         'Threshold Reached',
         'Transaction Created',
         'Transaction Issued',
@@ -559,6 +560,10 @@ export interface ApiItemItem extends Struct.CollectionTypeSchema {
     sku: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    stockMovements: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::stock-movement.stock-movement'
+    >;
     stockQty: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<0>;
@@ -568,6 +573,53 @@ export interface ApiItemItem extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiStockMovementStockMovement
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'stock_movements';
+  info: {
+    displayName: 'Stock Movement';
+    pluralName: 'stock-movements';
+    singularName: 'stock-movement';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    item: Schema.Attribute.Relation<'manyToOne', 'api::item.item'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::stock-movement.stock-movement'
+    > &
+      Schema.Attribute.Private;
+    newStock: Schema.Attribute.Integer;
+    notes: Schema.Attribute.Text;
+    previousStock: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    qty: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    reason: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<['In', 'Out', 'Adjustment']> &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -1099,6 +1151,10 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    stockMovements: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::stock-movement.stock-movement'
+    >;
     transactions: Schema.Attribute.Relation<
       'oneToMany',
       'api::transaction.transaction'
@@ -1129,6 +1185,7 @@ declare module '@strapi/strapi' {
       'api::audit-log.audit-log': ApiAuditLogAuditLog;
       'api::category.category': ApiCategoryCategory;
       'api::item.item': ApiItemItem;
+      'api::stock-movement.stock-movement': ApiStockMovementStockMovement;
       'api::transaction.transaction': ApiTransactionTransaction;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
