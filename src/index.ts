@@ -74,6 +74,17 @@ export default {
           "plugin::users-permissions.user.me",
         ],
       },
+      {
+        name: "Cashier",
+        type: "cashier",
+        legacyNames: [],
+        legacyTypes: [],
+        permissions: [
+          "api::cashier.cashier.find",
+          "api::cashier.cashier.issue",
+          "plugin::users-permissions.user.me",
+        ],
+      },
     ];
 
     const findRole = (where: object) =>
