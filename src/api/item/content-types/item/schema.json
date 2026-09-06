@@ -40,6 +40,14 @@
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "items"
+    },
+    "isForSale": {
+      "type": "boolean",
+      "default": false
+    },
+    "price": {
+      "type": "decimal",
+      "required": false
     }
   }
 }
