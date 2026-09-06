@@ -3,27 +3,43 @@
  */
 
 export default {
-  type: 'content-api' as const,
+  type: "content-api" as const,
   routes: [
     {
-      method: 'POST',
-      path: '/transactions/request',
-      handler: 'transaction.request',
+      method: "POST",
+      path: "/transactions/request",
+      handler: "api::transaction.custom-transaction.request",
+      config: {
+        auth: { scope: ["api::transaction.custom-transaction.request"] },
+        policies: [],
+      },
     },
     {
-      method: 'POST',
-      path: '/transactions/issue',
-      handler: 'transaction.issue',
+      method: "POST",
+      path: "/transactions/issue",
+      handler: "api::transaction.custom-transaction.issue",
+      config: {
+        auth: { scope: ["api::transaction.custom-transaction.issue"] },
+        policies: [],
+      },
     },
     {
-      method: 'POST',
-      path: '/transactions/:documentId/complete',
-      handler: 'transaction.complete',
+      method: "POST",
+      path: "/transactions/:documentId/complete",
+      handler: "api::transaction.custom-transaction.complete",
+      config: {
+        auth: { scope: ["api::transaction.custom-transaction.complete"] },
+        policies: [],
+      },
     },
     {
-      method: 'POST',
-      path: '/transactions/:documentId/void',
-      handler: 'transaction.void',
+      method: "POST",
+      path: "/transactions/:documentId/void",
+      handler: "api::transaction.custom-transaction.void",
+      config: {
+        auth: { scope: ["api::transaction.custom-transaction.void"] },
+        policies: [],
+      },
     },
   ],
 };
