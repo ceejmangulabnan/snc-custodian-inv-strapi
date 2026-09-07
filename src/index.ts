@@ -77,8 +77,8 @@ export default {
       {
         name: "Cashier",
         type: "cashier",
-        legacyNames: [],
-        legacyTypes: [],
+        legacyNames: ["Cashier"],
+        legacyTypes: ["cashier"],
         permissions: [
           "api::cashier.cashier.find",
           "api::cashier.cashier.issue",
