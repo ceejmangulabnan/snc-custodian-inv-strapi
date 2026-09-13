@@ -71,6 +71,7 @@ export default {
           "api::stock-movement.stock-movement.find",
           "api::stock-movement.stock-movement.findOne",
           "api::transactions-stats.transactions-stats.stats",
+          "plugin::users-permissions.role.find",
           "plugin::users-permissions.user.me",
         ],
       },
@@ -82,6 +83,7 @@ export default {
         permissions: [
           "api::cashier.cashier.find",
           "api::cashier.cashier.issue",
+          "plugin::users-permissions.role.find",
           "plugin::users-permissions.user.me",
         ],
       },
