@@ -83,6 +83,8 @@ export default {
         permissions: [
           "api::cashier.cashier.find",
           "api::cashier.cashier.issue",
+          "api::transaction.transaction.find",
+          "api::transaction.transaction.findOne",
           "plugin::users-permissions.role.find",
           "plugin::users-permissions.user.me",
         ],
