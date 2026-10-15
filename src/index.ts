@@ -86,6 +86,8 @@ export default {
           "api::transaction.transaction.find",
           "api::transaction.transaction.findOne",
           "plugin::users-permissions.role.find",
+          "plugin::users-permissions.role.findOne",
+          "plugin::users-permissions.user.find",
           "plugin::users-permissions.user.me",
         ],
       },
