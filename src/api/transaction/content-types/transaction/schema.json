@@ -11,6 +11,16 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "SALE",
+      "enum": [
+        "SALE",
+        "DEPARTMENT_SUPPLY",
+        "DEPARTMENT_BORROW"
+      ]
+    },
     "custodian": {
       "type": "relation",
       "relation": "manyToOne",
@@ -34,6 +44,32 @@
       "type": "component",
       "component": "inventory.line-item",
       "repeatable": true
+    },
+    "receiptNumber": {
+      "type": "string",
+      "unique": true
+    },
+    "studentIdNumber": {
+      "type": "string"
+    },
+    "studentName": {
+      "type": "string"
+    },
+    "purchaseDate": {
+      "type": "datetime"
+    },
+    "departmentName": {
+      "type": "string"
+    },
+    "borrowerName": {
+      "type": "string"
+    },
+    "returnDate": {
+      "type": "datetime"
+    },
+    "isReturned": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

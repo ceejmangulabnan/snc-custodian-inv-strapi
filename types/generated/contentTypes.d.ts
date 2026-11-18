@@ -634,6 +634,7 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    borrowerName: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -641,6 +642,8 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    departmentName: Schema.Attribute.String;
+    isReturned: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     items: Schema.Attribute.Component<'inventory.line-item', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -654,6 +657,16 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.DefaultTo<'Completed'>;
     publishedAt: Schema.Attribute.DateTime;
+    purchaseDate: Schema.Attribute.DateTime;
+    receiptNumber: Schema.Attribute.String & Schema.Attribute.Unique;
+    returnDate: Schema.Attribute.DateTime;
+    studentIdNumber: Schema.Attribute.String;
+    studentName: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<
+      ['SALE', 'DEPARTMENT_SUPPLY', 'DEPARTMENT_BORROW']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'SALE'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
