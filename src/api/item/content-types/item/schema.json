@@ -1,59 +1,59 @@
 {
-  "kind": "collectionType",
-  "collectionName": "items",
-  "info": {
-    "singularName": "item",
-    "pluralName": "items",
-    "displayName": "Item"
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
-  "attributes": {
-    "name": {
-      "type": "string",
-      "required": true
+    "kind": "collectionType",
+    "collectionName": "items",
+    "info": {
+        "singularName": "item",
+        "pluralName": "items",
+        "displayName": "Item"
     },
-    "sku": {
-      "type": "string",
-      "required": true,
-      "unique": true
+    "options": {
+        "draftAndPublish": false
     },
-    "stockQty": {
-      "type": "integer",
-      "required": true,
-      "default": 0
-    },
-    "minThreshold": {
-      "type": "integer",
-      "required": true,
-      "default": 5
-    },
-    "unit": {
-      "type": "string",
-      "default": "Each",
-      "required": true
-    },
-    "category": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::category.category",
-      "inversedBy": "items"
-    },
-    "isForSale": {
-      "type": "boolean",
-      "default": false
-    },
-    "price": {
-      "type": "decimal",
-      "required": false
-    },
-    "stockMovements": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::stock-movement.stock-movement",
-      "mappedBy": "item"
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "sku": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "stockQty": {
+            "type": "integer",
+            "required": true,
+            "default": 0
+        },
+        "minThreshold": {
+            "type": "integer",
+            "required": true,
+            "default": 5
+        },
+        "unit": {
+            "type": "string",
+            "default": "Each",
+            "required": true
+        },
+        "category": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::category.category",
+            "inversedBy": "items"
+        },
+        "isForSale": {
+            "type": "boolean",
+            "default": false
+        },
+        "price": {
+            "type": "decimal",
+            "required": false
+        },
+        "stockMovements": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::stock-movement.stock-movement",
+            "mappedBy": "item"
+        }
     }
-  }
 }

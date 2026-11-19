@@ -3,12 +3,12 @@
  */
 
 export default {
-  type: 'content-api' as const,
-  routes: [
-    {
-      method: 'GET',
-      path: '/inventory-stats',
-      handler: 'inventory-stats.stats',
-    },
-  ],
-};
+    type: 'content-api' as const,
+    routes: [
+        {
+            method: 'GET',
+            path: '/inventory-stats',
+            handler: 'inventory-stats.stats',
+        },
+    ],
+}

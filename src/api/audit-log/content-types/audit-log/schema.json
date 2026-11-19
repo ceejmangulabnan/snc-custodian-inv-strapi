@@ -1,60 +1,54 @@
 {
-  "kind": "collectionType",
-  "collectionName": "audit_logs",
-  "info": {
-    "singularName": "audit-log",
-    "pluralName": "audit-logs",
-    "displayName": "Audit Log"
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
-  "attributes": {
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "auditLogs"
+    "kind": "collectionType",
+    "collectionName": "audit_logs",
+    "info": {
+        "singularName": "audit-log",
+        "pluralName": "audit-logs",
+        "displayName": "Audit Log"
     },
-    "action": {
-      "type": "enumeration",
-      "required": true,
-      "enum": [
-        "Login",
-        "Logout",
-        "Item Created",
-        "Item Updated",
-        "Item Deleted",
-        "Stock In",
-        "Stock Out",
-        "Stock Adjusted",
-        "Threshold Reached",
-        "Transaction Created",
-        "Transaction Issued",
-        "Transaction Completed",
-        "Transaction Voided",
-        "User Created",
-        "User Updated",
-        "User Deleted"
-      ]
+    "options": {
+        "draftAndPublish": false
     },
-    "target": {
-      "type": "string"
-    },
-    "category": {
-      "type": "enumeration",
-      "required": true,
-      "enum": [
-        "Auth",
-        "Inventory",
-        "Transaction",
-        "User",
-        "System"
-      ]
-    },
-    "detail": {
-      "type": "text"
+    "pluginOptions": {},
+    "attributes": {
+        "user": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user",
+            "inversedBy": "auditLogs"
+        },
+        "action": {
+            "type": "enumeration",
+            "required": true,
+            "enum": [
+                "Login",
+                "Logout",
+                "Item Created",
+                "Item Updated",
+                "Item Deleted",
+                "Stock In",
+                "Stock Out",
+                "Stock Adjusted",
+                "Threshold Reached",
+                "Transaction Created",
+                "Transaction Issued",
+                "Transaction Completed",
+                "Transaction Voided",
+                "User Created",
+                "User Updated",
+                "User Deleted"
+            ]
+        },
+        "target": {
+            "type": "string"
+        },
+        "category": {
+            "type": "enumeration",
+            "required": true,
+            "enum": ["Auth", "Inventory", "Transaction", "User", "System"]
+        },
+        "detail": {
+            "type": "text"
+        }
     }
-  }
 }
