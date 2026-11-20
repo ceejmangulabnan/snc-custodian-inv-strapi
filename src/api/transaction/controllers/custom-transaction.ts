@@ -365,7 +365,8 @@ export default {
      */
     async request(ctx: Context) {
         const user = ctx.state.user as
-            { id: number; username: string } | undefined
+            | { id: number; username: string }
+            | undefined
         if (!user?.id) {
             throw badRequest('Not authenticated.')
         }
@@ -432,7 +433,8 @@ export default {
      */
     async issue(ctx: Context) {
         const user = ctx.state.user as
-            { id: number; username: string } | undefined
+            | { id: number; username: string }
+            | undefined
         if (!user?.id) {
             throw badRequest('Not authenticated.')
         }
@@ -540,7 +542,8 @@ export default {
         }
 
         const admin = ctx.state.user as
-            { id: number; username: string } | undefined
+            | { id: number; username: string }
+            | undefined
 
         const reasonLabel = formatDepartmentContext(transaction)
 
@@ -583,7 +586,8 @@ export default {
      */
     async returnBorrowed(ctx: Context) {
         const user = ctx.state.user as
-            { id: number; username: string } | undefined
+            | { id: number; username: string }
+            | undefined
         if (!user?.id) {
             throw badRequest('Not authenticated.')
         }
@@ -687,7 +691,8 @@ export default {
         }
 
         const admin = ctx.state.user as
-            { id: number; username: string } | undefined
+            | { id: number; username: string }
+            | undefined
 
         await strapi.db.transaction(async () => {
             await strapi.documents(TRANSACTIONS_API).update({
@@ -713,9 +718,21 @@ export default {
         return { data: updated }
     },
 
+    // Get SALE Transactions for cashier use only
+
     async cashierGet(ctx: Context) {
         const role = ctx.state.user.role.type
-        return { role }
+        if (role === 'cashier') {
+            const saleTransactions = await strapi
+                .documents(TRANSACTIONS_API)
+                .findMany({
+                    populate: '*',
+                    filters: {
+                        type: 'SALE',
+                    },
+                })
+            return { data: saleTransactions }
+        }
     },
 }
 
