@@ -72,6 +72,15 @@ function badRequest(message: string): Error & { status: number } {
     return err
 }
 
+const DEFAULT_PAGE_SIZE = 10
+const MAX_PAGE_SIZE = 50
+
+function parsePositiveInt(value: unknown, fallback: number): number {
+    const raw = Array.isArray(value) ? value[0] : value
+    const parsed = Number.parseInt(String(raw), 10)
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+}
+
 function parseSalePayload(payload: unknown): ParsedSalePayload {
     const body = (payload ?? {}) as {
         items?: unknown
@@ -296,7 +305,7 @@ async function loadTransaction(
 export default {
     /**
      * List items that cashiers may sell. Only items with isForSale set to true
-     * are returned.
+     * are returned, paginated via pagination[page] / pagination[pageSize].
      */
     async find(ctx: Context) {
         const user = ctx.state.user as
@@ -305,9 +314,33 @@ export default {
             throw badRequest('Not authenticated.')
         }
 
-        const saleItems = await strapi.documents(ITEMS_API).findMany({
-            filters: { isForSale: true },
-        })
+        const pagination = (ctx.query?.pagination ?? {}) as Record<
+            string,
+            unknown
+        >
+        const page = parsePositiveInt(
+            pagination.page ?? ctx.query?.['pagination[page]'],
+            1
+        )
+        const pageSize = Math.min(
+            parsePositiveInt(
+                pagination.pageSize ?? ctx.query?.['pagination[pageSize]'],
+                DEFAULT_PAGE_SIZE
+            ),
+            MAX_PAGE_SIZE
+        )
+
+        const filters = { isForSale: true }
+
+        const [saleItems, total] = await Promise.all([
+            strapi.documents(ITEMS_API).findMany({
+                filters,
+                sort: 'id:asc',
+                start: (page - 1) * pageSize,
+                limit: pageSize,
+            }),
+            strapi.documents(ITEMS_API).count({ filters }),
+        ])
 
         return {
             data: (saleItems as unknown as SaleItem[]).map((item) => ({
@@ -319,6 +352,14 @@ export default {
                 unit: item.unit,
                 minThreshold: item.minThreshold,
             })),
+            meta: {
+                pagination: {
+                    page,
+                    pageSize,
+                    total,
+                    pageCount: Math.ceil(total / pageSize),
+                },
+            },
         }
     },
 
