@@ -396,6 +396,18 @@ export default {
             return { id: item.id, qtyPulled: line.qtyPulled, item }
         })
 
+        // Snapshot the catalog price at sale time so historical reports stay
+        // accurate when prices change later. A null catalog price is treated
+        // as zero, matching the existing receipt calculation in the client.
+        const pricedLines = lines.map(({ item, qtyPulled }) => {
+            const unitPrice = byId[item]?.price ?? 0
+            return { item, qtyPulled, unitPrice, lineTotal: unitPrice * qtyPulled }
+        })
+        const saleTotal = pricedLines.reduce(
+            (sum, line) => sum + line.lineTotal,
+            0
+        )
+
         // 2. Execute all writes inside one atomic Strapi 5 DB transaction
         const createdDocumentId = await strapi.db.transaction(
             async ({ trx }) => {
@@ -413,10 +425,8 @@ export default {
                             studentName,
                             purchaseDate: new Date(purchaseDate).toISOString(),
                             custodian: user.id,
-                            items: lines.map(({ item, qtyPulled }) => ({
-                                item,
-                                qtyPulled,
-                            })),
+                            items: pricedLines,
+                            total: saleTotal,
                         },
                     })
 
