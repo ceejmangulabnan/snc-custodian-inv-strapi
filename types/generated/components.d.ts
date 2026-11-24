@@ -7,6 +7,7 @@ export interface InventoryLineItem extends Struct.ComponentSchema {
     }
     attributes: {
         item: Schema.Attribute.Relation<'oneToOne', 'api::item.item'>
+        lineTotal: Schema.Attribute.Decimal
         qtyPulled: Schema.Attribute.Integer &
             Schema.Attribute.Required &
             Schema.Attribute.SetMinMax<
@@ -15,6 +16,7 @@ export interface InventoryLineItem extends Struct.ComponentSchema {
                 },
                 number
             >
+        unitPrice: Schema.Attribute.Decimal
     }
 }
 

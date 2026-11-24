@@ -679,6 +679,7 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
         returnDate: Schema.Attribute.DateTime
         studentIdNumber: Schema.Attribute.String
         studentName: Schema.Attribute.String
+        total: Schema.Attribute.Decimal
         type: Schema.Attribute.Enumeration<
             ['SALE', 'DEPARTMENT_SUPPLY', 'DEPARTMENT_BORROW']
         > &

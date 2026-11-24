@@ -62,6 +62,10 @@
         "isReturned": {
             "type": "boolean",
             "default": false
+        },
+        "total": {
+            "type": "decimal",
+            "required": false
         }
     }
 }
