@@ -37,6 +37,7 @@ export default {
                     'api::stock-movement.stock-movement.find',
                     'api::stock-movement.stock-movement.findOne',
                     'api::transactions-stats.transactions-stats.stats',
+                    'api::report.report.sales',
                     'api::audit-log.audit-log.find',
                     'api::audit-log.audit-log.findOne',
                     'plugin::users-permissions.user.find',
