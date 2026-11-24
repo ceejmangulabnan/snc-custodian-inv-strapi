@@ -732,6 +732,7 @@ export default {
                     filters: {
                         type: 'SALE',
                     },
+                    sort: 'createdAt:desc',
                 })
             return { data: saleTransactions }
         }
