@@ -33,11 +33,6 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
             ctx.throw(400, 'A valid start and end date are required.')
         }
 
-        const offsetRaw = parseText(query.tzOffsetMinutes)
-        const tzOffsetMinutes = Number.isFinite(Number(offsetRaw))
-            ? Number(offsetRaw)
-            : 0
-
         // Always hand Strapi a full ISO string, even if a caller supplied a
         // looser date format that Date.parse() can still understand.
         const startIso = new Date(Date.parse(start)).toISOString()
@@ -46,8 +41,6 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
         const params: SalesReportParams = {
             start: startIso,
             end: endIso,
-            tzOffsetMinutes,
-            granularity: parseText(query.granularity) === 'month' ? 'month' : 'day',
             page: parsePositiveInt(query.page, 1),
             pageSize: parsePositiveInt(query.pageSize, 10),
             search: parseText(query.search),

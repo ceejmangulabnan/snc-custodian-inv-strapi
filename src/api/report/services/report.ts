@@ -2,18 +2,15 @@
  * Sales report service.
  *
  * Aggregates completed SALE transactions for a date range. Price snapshots
- * stored on transactions and line items are used when available; older sales
- * created before those fields existed are reported as `null` revenue so the UI
- * can show an em dash instead of a misleading zero.
- */
+ * stored on transactions and line items are used when available.
+ *
+ **/
 
 import type { Core } from '@strapi/strapi'
 
 const TRANSACTIONS_API = 'api::transaction.transaction'
 const FETCH_PAGE_SIZE = 100
 const MAX_EXPORT_ROWS = 5000
-
-type Granularity = 'day' | 'month'
 
 interface ItemRef {
     id: number
@@ -72,14 +69,6 @@ interface DetailRow {
     lines: DetailLine[]
 }
 
-interface BucketAccumulator {
-    key: string
-    sales: number
-    units: number
-    revenue: number
-    priced: number
-}
-
 interface ItemAccumulator {
     itemId: number
     name: string
@@ -102,8 +91,6 @@ interface CashierAccumulator {
 export interface SalesReportParams {
     start: string
     end: string
-    tzOffsetMinutes: number
-    granularity: Granularity
     page: number
     pageSize: number
     search: string
@@ -134,39 +121,13 @@ function rowRevenue(row: DetailRow): number | null {
     return null
 }
 
-function localKey(
-    iso: string,
-    offsetMinutes: number,
-    granularity: Granularity
-): string | null {
-    const timestamp = Date.parse(iso)
-    if (Number.isNaN(timestamp)) {
-        return null
-    }
-
-    // tzOffsetMinutes is minutes east of UTC, so local time = UTC + offset.
-    const shifted = new Date(timestamp + offsetMinutes * 60_000).toISOString()
-    return granularity === 'month' ? shifted.slice(0, 7) : shifted.slice(0, 10)
-}
-
-function bucketLabel(key: string, granularity: Granularity): string {
-    const iso =
-        granularity === 'month' ? `${key}-01T00:00:00Z` : `${key}T00:00:00Z`
-    return new Intl.DateTimeFormat('en-US', {
-        timeZone: 'UTC',
-        ...(granularity === 'month'
-            ? { month: 'short', year: 'numeric' }
-            : { month: 'short', day: 'numeric', year: 'numeric' }),
-    }).format(new Date(iso))
-}
-
 function compareText(a: string, b: string): number {
     return a.localeCompare(b)
 }
 
 const service = ({ strapi }: { strapi: Core.Strapi }) => ({
     async sales(params: SalesReportParams) {
-        const { start, end, tzOffsetMinutes, granularity } = params
+        const { start, end } = params
         const startMs = Date.parse(start)
         const endMs = Date.parse(end)
         if (Number.isNaN(startMs) || Number.isNaN(endMs)) {
@@ -204,7 +165,7 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
                 },
                 sort: 'id:asc',
                 pagination: { page, pageSize: FETCH_PAGE_SIZE },
-            })) as unknown as SaleDoc[]
+            })) as SaleDoc[]
 
             documents.push(...batch)
             if (batch.length < FETCH_PAGE_SIZE) {
@@ -257,7 +218,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
         }
 
         const students = new Set<string>()
-        const buckets = new Map<string, BucketAccumulator>()
         const items = new Map<number, ItemAccumulator>()
         const cashiers = new Map<string, CashierAccumulator>()
         let units = 0
@@ -276,31 +236,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
             const identity = row.studentIdNumber || row.studentName
             if (identity) {
                 students.add(identity)
-            }
-
-            const key = localKey(
-                row.effectiveDate,
-                tzOffsetMinutes,
-                granularity
-            )
-            if (key) {
-                const bucket = buckets.get(key) ?? {
-                    key,
-                    sales: 0,
-                    units: 0,
-                    revenue: 0,
-                    priced: 0,
-                }
-                bucket.sales += 1
-                bucket.units += row.lines.reduce(
-                    (sum, line) => sum + line.qtyPulled,
-                    0
-                )
-                if (saleRevenue !== null) {
-                    bucket.revenue += saleRevenue
-                    bucket.priced += 1
-                }
-                buckets.set(key, bucket)
             }
 
             for (const line of row.lines) {
@@ -405,15 +340,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
                 pricedSales,
                 students: students.size,
             },
-            buckets: [...buckets.values()]
-                .sort((a, b) => compareText(a.key, b.key))
-                .map((bucket) => ({
-                    key: bucket.key,
-                    label: bucketLabel(bucket.key, granularity),
-                    sales: bucket.sales,
-                    units: bucket.units,
-                    revenue: bucket.priced > 0 ? bucket.revenue : null,
-                })),
             topItems: [...items.values()]
                 .sort((a, b) => b.units - a.units || b.revenue - a.revenue)
                 .map((item) => ({
