@@ -69,16 +69,6 @@ interface DetailRow {
     lines: DetailLine[]
 }
 
-interface ItemAccumulator {
-    itemId: number
-    name: string
-    sku: string
-    units: number
-    sales: number
-    revenue: number
-    priced: number
-}
-
 interface CashierAccumulator {
     id: number | null
     username: string
@@ -218,7 +208,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
         }
 
         const students = new Set<string>()
-        const items = new Map<number, ItemAccumulator>()
         const cashiers = new Map<string, CashierAccumulator>()
         let units = 0
         let revenue = 0
@@ -236,25 +225,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
             const identity = row.studentIdNumber || row.studentName
             if (identity) {
                 students.add(identity)
-            }
-
-            for (const line of row.lines) {
-                const item = items.get(line.itemId) ?? {
-                    itemId: line.itemId,
-                    name: line.name,
-                    sku: line.sku,
-                    units: 0,
-                    sales: 0,
-                    revenue: 0,
-                    priced: 0,
-                }
-                item.units += line.qtyPulled
-                item.sales += 1
-                if (line.lineTotal !== null) {
-                    item.revenue += line.lineTotal
-                    item.priced += 1
-                }
-                items.set(line.itemId, item)
             }
 
             const cashier = cashiers.get(row.cashier) ?? {
@@ -340,16 +310,6 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
                 pricedSales,
                 students: students.size,
             },
-            topItems: [...items.values()]
-                .sort((a, b) => b.units - a.units || b.revenue - a.revenue)
-                .map((item) => ({
-                    itemId: item.itemId,
-                    name: item.name,
-                    sku: item.sku,
-                    units: item.units,
-                    sales: item.sales,
-                    revenue: item.priced > 0 ? item.revenue : null,
-                })),
             cashiers: [...cashiers.values()]
                 .sort((a, b) => b.sales - a.sales || b.units - a.units)
                 .map((cashier) => ({
